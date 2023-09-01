@@ -15,41 +15,34 @@
 #
 
 
-from inspect import getfullargspec
+from flet_core import Text, Row, IconButton, icons
 
-from flet_core import Text, View
+from flet_manager.views.base import BaseView
 
 
-class BaseView(View):
-    route: str = '/'
+class ErrorView(BaseView):
+    route: str = '/error'
     app: None
     controls: list
     params: dict
 
-    def __init__(self, **kwargs):
-        self.params = {}
-
-        params_parent = {}
-        params_required = getfullargspec(super().__init__).args
-
-        for key, value in kwargs.items():
-            if key in params_required:
-                params_parent[key] = value
-            self.params[key] = value
-
-        super().__init__(
-            **params_parent,
-            route=self.route,
-        )
+    async def go_back(self, e):
+        await self.app.view_change(go_back=True)
 
     async def build(self):
         self.controls = [
-            Text(value='404'),
+            Row(
+                controls=[
+                    IconButton(
+                        icon=icons.ARROW_BACK,
+                        icon_size=48,
+                        tooltip='Go back',
+                        on_click=self.go_back,
+                    ),
+                    Text(
+                        value=self.params.get('error_code'),
+                        size=48,
+                    ),
+                ],
+            ),
         ]
-
-    async def restart(self):
-        await self.build()
-        await self.update_async()
-
-    async def get(self):
-        return self

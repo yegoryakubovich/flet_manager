@@ -16,3 +16,10 @@
 
 
 from flet_manager.views.base import BaseView
+from flet_manager.views.error import ErrorView
+
+
+__all__ = [
+    'BaseView',
+    'ErrorView',
+]

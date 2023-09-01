@@ -15,40 +15,97 @@
 #
 
 
-from flet_core import Page, AppView
+from ast import literal_eval
+from urllib.parse import urlparse, parse_qsl
+
+from flet_core import Page, AppView, RouteChangeEvent
 from flet_runtime import app as flet_app
+
+from flet_manager.views import ErrorView, BaseView
 
 
 class App:
     title: str
     page: Page
+    routes: dict
+    theme: type
+    session: type
 
-    def __init__(self, title: str, main_view: type, **kwargs):
+    def __init__(
+            self,
+            title: str,
+            main_view: type,
+            error_view: type = ErrorView,
+            views: list[BaseView] = None,
+            theme: type = None,
+            session: type = None,
+            **kwargs):
+        if not views:
+            views = []
+
         self.title = title
         self.main_view_class = main_view
         self.main_view = None
-        flet_app(target=self.start, view=AppView.FLET_APP_WEB, **kwargs)
+        self.error_view = error_view
+        self.theme = theme
+        self.session = session
+        self.routes = {}
+
+        for view in views:
+            self.routes[view.route] = view
+
+        flet_app(target=self.start, view=AppView.WEB_BROWSER, **kwargs)
 
     async def view_pop(self, view):
-        self.page.views.pop()
-        await self.page.update_async()
+        await self.view_change(go_back=True)
 
-    async def view_change(self, view=None, back=False):
+    async def view_change(self, view: BaseView = None, go_back: bool = False):
         if not self.page.views:
-            view_next = await self.main_view.get()
-            self.page.views.append(view_next)
-        elif back:
+            view = self.main_view
+
+        if go_back:
             self.page.views.pop()
-        else:
-            view_next = await view.get()
-            self.page.views.append(view_next)
+        elif view:
+            view.app = self
+            await view.build()
+            self.page.views.append(await view.get())
 
         await self.page.go_async(self.page.views[-1].route)
         await self.page.update_async()
 
+    async def route_change(self, e: RouteChangeEvent):
+        url = urlparse(e.route)
+        route = url.path
+        params = {}
+
+        # Set params for view
+        for key, value in dict(parse_qsl(url.query)).items():
+            try:
+                value = literal_eval(str(value))
+            except ValueError:
+                pass
+            params[key] = value
+        if self.page.views[-1].route == e.route:
+            return
+
+        # Go back if current == -2 view
+        try:
+            if self.page.views[-2].route == e.route:
+                return await self.view_change(go_back=True)
+        except IndexError:
+            pass
+
+        try:
+            view = self.routes[route]
+        except KeyError:
+            view = self.error_view
+            params['error_code'] = 404
+        await self.view_change(view=view(**params))
+
     async def start(self, page: Page):
         self.page = page
         self.page.on_view_pop = self.view_pop
+        self.page.on_route_change = self.route_change
 
         self.page.title = self.title
 

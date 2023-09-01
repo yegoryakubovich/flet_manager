@@ -1,3 +1,4 @@
 /dist
 /.idea
 /flet_manager.egg-info
+*.cpython-39.pyc

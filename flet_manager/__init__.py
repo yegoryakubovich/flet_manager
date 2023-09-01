@@ -16,4 +16,8 @@
 
 
 from flet_manager.app import App
-from flet_manager.views import *
+
+
+__all__ = [
+    'App',
+]
