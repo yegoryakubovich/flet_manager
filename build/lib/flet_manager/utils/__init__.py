@@ -15,9 +15,15 @@
 #
 
 
-from .app import App
+from .client import Client
+from .get_svg import get_svg
+from .themes import Themes
+from .font import Font
 
 
 __all__ = [
-    'App',
+    'Client',
+    'Font',
+    'Themes',
+    'get_svg',
 ]

@@ -15,9 +15,16 @@
 #
 
 
-from .app import App
+from pathlib import Path
 
 
-__all__ = [
-    'App',
-]
+class Font:
+    name: str
+    path: str
+
+    def __init__(self, path: str):
+        self.name = Path(path).stem
+        self.path = path
+
+    def __repr__(self):
+        return self.name

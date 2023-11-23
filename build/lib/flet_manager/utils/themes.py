@@ -15,9 +15,24 @@
 #
 
 
-from .app import App
+from flet_core import Theme
 
 
-__all__ = [
-    'App',
-]
+light_default = Theme(
+    color_scheme_seed='#1d1d1d',
+)
+dark_default = Theme(
+    color_scheme_seed='#ffffff',
+)
+
+
+class Themes:
+    light: Theme
+    dark: Theme
+
+    def __init__(self, light: Theme = light_default, dark: Theme = dark_default):
+        self.light = light
+        self.dark = dark
+
+    def get(self):
+        return self.light, self.dark

@@ -21,7 +21,7 @@ from setuptools import setup, PEP420PackageFinder
 
 
 NAME = 'flet_manager'
-VERSION = '0.2'
+VERSION = '0.3'
 DESCRIPTION = ''
 URL = 'https://yegoryakubovich.com'
 PACKAGE_ROOT = path.abspath(path.dirname(__file__))
@@ -52,7 +52,7 @@ setup(
     python_requires='>=3.7',
 
     packages=packages,
-    install_requires=['flet'],
+    install_requires=['flet', 'flet_fastapi'],
     include_package_data=True,
     zip_safe=False,
 )

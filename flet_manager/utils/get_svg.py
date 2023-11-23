@@ -15,9 +15,7 @@
 #
 
 
-from .app import App
-
-
-__all__ = [
-    'App',
-]
+def get_svg(path: str):
+    with open(path) as file:
+        svg = file.readlines()
+    return svg
