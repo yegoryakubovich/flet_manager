@@ -28,6 +28,7 @@ class Client:
     routes: dict
     view_main = None
     view_error = None
+    session: None
 
     def __init__(
             self,
