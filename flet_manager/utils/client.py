@@ -68,15 +68,16 @@ class Client:
             view.client = self
             await view.build()
             self.page.views.append(await view.get())
+        else:
+            view = self.page.views[-1]
 
         # Change title & update
-        if view:
-            self.page.title = view.title
-        else:
-            self.page.title = self.page.views[-1].title
-
-        await self.page.go_async(self.page.views[-1].route)
+        self.page.title = view.title
+        await self.page.go_async(view.route)
         await self.page.update_async()
+
+        # On load event
+        await view.on_load()
 
     async def change_route(self, e: RouteChangeEvent):
         url = urlparse(e.route)

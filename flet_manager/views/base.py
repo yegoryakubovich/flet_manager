@@ -53,5 +53,8 @@ class BaseView(View):
         await self.build()
         await self.update_async()
 
+    async def on_load(self):
+        pass
+
     async def get(self):
         return self
