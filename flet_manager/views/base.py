@@ -55,6 +55,3 @@ class BaseView(View):
 
     async def on_load(self):
         pass
-
-    async def get(self):
-        return self

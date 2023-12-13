@@ -66,8 +66,9 @@ class Client:
             view = self.view_main()
         if view:
             view.client = self
+            view.controls = []
+            self.page.views.append(view)
             await view.build()
-            self.page.views.append(await view.get())
         else:
             view = self.page.views[-1]
 
