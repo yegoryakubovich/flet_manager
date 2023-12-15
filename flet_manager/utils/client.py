@@ -68,6 +68,7 @@ class Client:
             view.client = self
             view.controls = []
             self.page.views.append(view)
+            await self.page.update_async()
             await view.build()
         else:
             view = self.page.views[-1]
