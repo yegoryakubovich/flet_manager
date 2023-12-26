@@ -58,6 +58,7 @@ class Client:
             self,
             view=None,
             go_back: bool = False,
+            with_restart: bool = False,
     ):
         if go_back:
             self.page.views.pop()
@@ -76,6 +77,10 @@ class Client:
         # Change title & update
         self.page.title = view.title
         await self.page.go_async(view.route)
+
+        if with_restart:
+            await view.restart()
+
         await self.page.update_async()
 
         # On load event
