@@ -59,8 +59,9 @@ class Client:
             view=None,
             go_back: bool = False,
             with_restart: bool = False,
+            delete_current: bool = True,
     ):
-        if go_back:
+        if go_back or delete_current:
             self.page.views.pop()
 
         if not self.page.views and not view:
