@@ -54,6 +54,9 @@ class Client:
     async def pop_view(self, _):
         await self.change_view(go_back=True)
 
+    async def clear_views(self):
+        self.page.views.clear()
+
     async def change_view(
             self,
             view=None,
