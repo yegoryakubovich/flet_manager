@@ -21,7 +21,7 @@ from setuptools import setup, PEP420PackageFinder
 
 
 NAME = 'flet_manager'
-VERSION = '0.3.8'
+VERSION = '0.3.9'
 DESCRIPTION = ''
 URL = 'https://yegoryakubovich.com'
 PACKAGE_ROOT = path.abspath(path.dirname(__file__))

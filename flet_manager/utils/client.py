@@ -115,8 +115,7 @@ class Client:
         try:
             view = self.routes[route]
         except KeyError:
-            view = self.view_error
-            params['error_code'] = 404
+            view = self.view_main
         await self.change_view(view=view(**params))
 
     async def change_themes(self, themes: Themes):
