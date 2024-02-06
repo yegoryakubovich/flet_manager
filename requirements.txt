@@ -1,2 +1,2 @@
-flet
-flet_fastapi
+flet==0.19.0
+flet_fastapi==0.19.0

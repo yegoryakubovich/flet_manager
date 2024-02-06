@@ -45,9 +45,7 @@ class BaseView(View):
         )
 
     async def build(self):
-        self.controls = [
-            Text(value='404'),
-        ]
+        self.controls = []
 
     async def restart(self):
         await self.build()
