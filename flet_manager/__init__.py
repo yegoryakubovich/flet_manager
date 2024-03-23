@@ -1,5 +1,5 @@
 #
-# (c) 2023, Yegor Yakubovich, yegoryakubovich.com, personal@yegoryakybovich.com
+# (c) 2024, Yegor Yakubovich, yegoryakubovich.com, personal@yegoryakybovich.com
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,9 +15,64 @@
 #
 
 
-from .app import App
+from flet_core import Page
+from flet import app
+
+from .utils import Client, Themes
+from .utils import Font
+from .views import MainView, ErrorView
 
 
-__all__ = [
-    'App',
-]
+class AppType:
+    FLET = 'flet'
+    FASTAPI = 'fastapi'
+
+
+class App:
+    routes: dict[str]
+    client: Client
+
+    def __init__(
+            self,
+            name: str = 'Flet Manager',
+            view_main=MainView,
+            view_error=ErrorView,
+            views: list = None,
+
+            themes: Themes = Themes(),
+            fonts: list[Font] = None,
+
+            **kwargs,
+    ):
+        self.view_main = view_main
+        self.view_error = view_error
+        self.themes = themes
+
+        if not fonts:
+            fonts = []
+        self.fonts = dict(zip([font.name for font in fonts], [font.path for font in fonts]))
+
+        if not views:
+            views = []
+        self.routes = {}
+        for view in views:
+            self.routes[view.route] = view
+
+        self.fastapi = app(
+            self.start,
+            export_asgi_app=True,
+            **kwargs,
+        )
+
+    async def start(self, page: Page):
+        self.client = Client(
+            page=page,
+            themes=self.themes,
+            fonts=self.fonts,
+            routes=self.routes,
+            view_main=self.view_main,
+            view_error=self.view_error,
+        )
+        await self.client.change_view(
+            view=self.view_main(),
+        )
