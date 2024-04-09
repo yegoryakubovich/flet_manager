@@ -27,7 +27,7 @@ class ErrorView(BaseView):
     async def go_back(self, _):
         await self.client.change_view(go_back=True)
 
-    async def build(self):
+    async def construct(self):
         self.controls = [
             Row(
                 controls=[

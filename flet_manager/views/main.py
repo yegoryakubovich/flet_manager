@@ -23,7 +23,7 @@ from flet_manager.views.base import BaseView
 class MainView(BaseView):
     title = 'Main'
 
-    async def build(self):
+    async def construct(self):
         self.controls = [
             Container(
                 content=Text(

@@ -44,11 +44,11 @@ class BaseView(View):
             route=self.route,
         )
 
-    async def build(self):
+    async def construct(self):
         self.controls = []
 
     async def restart(self):
-        await self.build()
+        await self.construct()
         await self.update_async()
         await self.on_load()
         await self.update_async()
