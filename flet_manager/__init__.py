@@ -30,7 +30,6 @@ class AppType:
 
 class App:
     routes: dict[str]
-    client: Client
 
     def __init__(
             self,
@@ -65,7 +64,7 @@ class App:
         )
 
     async def start(self, page: Page):
-        self.client = Client(
+        client = Client(
             page=page,
             themes=self.themes,
             fonts=self.fonts,
@@ -73,6 +72,6 @@ class App:
             view_main=self.view_main,
             view_error=self.view_error,
         )
-        await self.client.change_view(
+        await client.change_view(
             view=self.view_main(),
         )
